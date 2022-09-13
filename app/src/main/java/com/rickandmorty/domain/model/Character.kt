@@ -1,15 +1,15 @@
 package com.rickandmorty.domain.model
 
-import android.webkit.WebStorage
 import com.rickandmorty.data.source.remote.dto.Location
+import com.rickandmorty.data.source.remote.dto.Origin
 
 data class Character(
     val id: Int,
     val name: String,
     val status: String,
-    val specie: String,
+    val species: String,
     val gender: String,
-    val origin: WebStorage.Origin,
+    val origin: Origin,
     val location: Location,
     val image: String
 )
