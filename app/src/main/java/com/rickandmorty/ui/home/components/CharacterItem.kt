@@ -21,11 +21,11 @@ import com.rickandmorty.domain.model.Characters
 fun CharacterItem(
     modifier: Modifier = Modifier,
     item: Characters,
-    onitemClicked: (Int) -> Unit
+    onItemClicked: (Int) -> Unit
 ) {
     Row(
         modifier = modifier
-            .clickable { onitemClicked(item.id) }
+            .clickable { onItemClicked(item.id) }
             .padding(start = 6.dp, top = 12.dp, bottom = 12.dp)
     ) {
         CharacterImageContainer(modifier = Modifier.size(64.dp)){

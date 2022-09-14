@@ -13,24 +13,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.rickandmorty.R
 import com.rickandmorty.domain.model.Characters
 import com.rickandmorty.ui.home.components.CharacterItem
+import com.rickandmorty.R
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun HomeScreen(
     onItemClicked: (Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
-){
+) {
 
     val state = viewModel.state
     val eventFlow = viewModel.eventFlow
     val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(key1 = true) {
         eventFlow.collectLatest { event ->
-            when(event){
+            when (event) {
                 is HomeViewModel.UIEvent.ShowSnackBar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
@@ -47,17 +47,16 @@ fun HomeScreen(
         },
         bottomBar = {
             HomeBottomBar(
-                showNext = state.showNext,
                 showPrevious = state.showPrevious,
+                showNext = state.showNext,
                 onPreviousPressed = { viewModel.getCharacters(false) },
-                onNextPressed = {viewModel.getCharacters(true)}
+                onNextPressed = { viewModel.getCharacters(true) }
             )
         }
-    ){
-        innerPadding ->
+    ) { innerPadding ->
         HomeContent(
             modifier = Modifier.padding(innerPadding),
-            onItemClicked = {onItemClicked(it)},
+            onItemClicked = { onItemClicked(it) },
             isLoading = state.isLoading,
             characters = state.characters
         )
@@ -65,36 +64,56 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeContent(
-    modifier: Modifier,
+private fun HomeTopBar(
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(id = R.string.top_bar),
+                textAlign = TextAlign.Center,
+                modifier = modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center)
+            )
+        },
+        backgroundColor = MaterialTheme.colors.surface
+    )
+}
+
+@Composable
+private fun HomeContent(
+    modifier: Modifier = Modifier,
     onItemClicked: (Int) -> Unit,
-    isLoading: Boolean,
+    isLoading: Boolean = false,
     characters: List<Characters> = emptyList()
 ) {
-    Surface (
+
+    Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colors.surface
-    ){
+    ) {
         LazyColumn(
             contentPadding = PaddingValues(vertical = 6.dp),
+            modifier = Modifier.fillMaxWidth(),
             content = {
-                items(characters.size){ index ->
-                    CharacterItem(modifier = Modifier.fillMaxWidth(),
+                items(characters.size) { index ->
+                    CharacterItem(
+                        modifier = Modifier.fillMaxWidth(),
                         item = characters[index],
-                        onitemClicked = {onItemClicked(it)})
+                        onItemClicked = { onItemClicked(it) }
+                    )
                 }
             }
         )
-        if(isLoading){
-            FullScreenLoading()
-        }
+        if (isLoading) FullScreenLoading()
     }
 }
 
 @Composable
 private fun HomeBottomBar(
     showPrevious: Boolean,
-    showNext : Boolean,
+    showNext: Boolean,
     onPreviousPressed: () -> Unit,
     onNextPressed: () -> Unit
 ) {
@@ -108,13 +127,13 @@ private fun HomeBottomBar(
                 .fillMaxWidth()
                 .padding(horizontal = 2.dp),
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             TextButton(
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp),
                 enabled = showPrevious,
-                onClick =  {onPreviousPressed}
+                onClick = onPreviousPressed
             ) {
                 Text(text = "Previous")
             }
@@ -122,8 +141,8 @@ private fun HomeBottomBar(
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp),
-                enabled = showPrevious,
-                onClick =  {onNextPressed}
+                enabled = showNext,
+                onClick = onNextPressed
             ) {
                 Text(text = "Next")
             }
@@ -132,27 +151,12 @@ private fun HomeBottomBar(
 }
 
 @Composable
-private fun HomeTopBar(
-    modifier: Modifier = Modifier
-){
-    TopAppBar (
-        title = {
-            Text ( stringResource(id = R.string.top_bar),
-            textAlign = TextAlign.Center,
-                modifier = modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
-            )
-        },
-        backgroundColor = MaterialTheme.colors.surface
-    )
-}
-
-@Composable
-fun FullScreenLoading(){
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .wrapContentSize(Alignment.Center)){
+private fun FullScreenLoading() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+    ) {
         CircularProgressIndicator()
     }
 }
