@@ -6,7 +6,7 @@ import com.rickandmorty.domain.repositories.CharacterRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class getCharactersUseCase @Inject constructor(
+class GetCharactersUseCase @Inject constructor(
     private val repository: CharacterRepository
 ) {
     operator fun invoke(page : Int) : Flow<Result<List<Characters>>> {

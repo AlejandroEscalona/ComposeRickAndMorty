@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RickAndMorty</string>
+    <string name="top_bar">Rick And Morty</string>
 </resources>

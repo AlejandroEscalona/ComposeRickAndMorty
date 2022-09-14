@@ -1,13 +1,12 @@
 package com.rickandmorty.ui.home
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rickandmorty.data.Result
-import com.rickandmorty.domain.use_case.GetCharacterUseCase
-import com.rickandmorty.domain.use_case.getCharactersUseCase
+import com.rickandmorty.domain.use_case.GetCharactersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -18,8 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getCharactersUseCase : getCharactersUseCase
-): ViewModel(){
+    private val getCharactersUseCase: GetCharactersUseCase
+): ViewModel() {
 
     var state by mutableStateOf(HomeState(isLoading = true))
         private set
@@ -29,22 +28,23 @@ class HomeViewModel @Inject constructor(
 
     private var currentPage = 1
 
-    init{
+    init {
         getCharacters(increase = false)
     }
 
-    private fun getCharacters(increase: Boolean) {
+    fun getCharacters(increase: Boolean) {
         viewModelScope.launch {
-            if(increase) currentPage++ else if (currentPage > 1) currentPage--
+            if (increase) currentPage++ else if (currentPage > 1) currentPage--
             val showPrevious = currentPage > 1
             val showNext = currentPage < 42
-            getCharactersUseCase(currentPage).onEach { result ->
-                when(result) {
+            getCharactersUseCase(currentPage).onEach {  result ->
+                when (result) {
                     is Result.Success -> {
                         state = state.copy(
                             characters = result.data ?: emptyList(),
                             isLoading = false,
-                            showPreviews = showPrevious
+                            showPrevious = showPrevious,
+                            showNext = showNext
                         )
                     }
                     is Result.Error -> {
@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(
                             isLoading = false
                         )
                         _eventFlow.emit(UIEvent.ShowSnackBar(
-                            result.message ?: "Unkown error"
+                            result.message ?: "Unknown error"
                         ))
                     }
                     is Result.Loading -> {
@@ -65,8 +65,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
-    sealed class UIEvent{
-        data class ShowSnackBar(val message : String): UIEvent()
+    sealed class UIEvent {
+        data class ShowSnackBar(val message: String): UIEvent()
     }
 }
