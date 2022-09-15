@@ -14,7 +14,8 @@ fun CharactersDto.toListCharacters() : List<Characters> {
             id = result.id,
             name = result.name,
             image = result.image,
-            specie = result.species
+            specie = result.species,
+            status = result.status
         )
     }
     return resultEntries

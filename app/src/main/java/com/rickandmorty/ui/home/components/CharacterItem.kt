@@ -40,10 +40,20 @@ fun CharacterItem(
             Text(text = item.name,
                 style = MaterialTheme.typography.h4,
             )
-            CompositionLocalProvider(LocalContentAlpha provides  ContentAlpha.medium) {
-                Text(text = item.specie,
-                    style = MaterialTheme.typography.caption,
-                )
+            Row(Modifier.padding(8.dp)) {
+                CompositionLocalProvider(LocalContentAlpha provides  ContentAlpha.medium)
+                {
+                    Text(text = item.specie,
+                        style = MaterialTheme.typography.caption,
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                CompositionLocalProvider(LocalContentAlpha provides  ContentAlpha.medium)
+                {
+                    Text(text = item.status,
+                        style = MaterialTheme.typography.caption,
+                    )
+                }
             }
         }
         Divider(modifier = Modifier.padding(top = 10.dp))
