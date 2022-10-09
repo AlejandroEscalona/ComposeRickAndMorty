@@ -1,6 +1,5 @@
 package com.rickandmorty.data.source.remote.dto
 
-import com.rickandmorty.domain.model.Character
 import com.rickandmorty.domain.model.Characters
 
 data class CharactersDto(
